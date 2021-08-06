@@ -15,7 +15,6 @@
 	<table class="table">
 		<thead>
 			<tr>
-				<th>Id</th>
 				<th>FullName</th>
 				<th>Company</th>
 				<th>Adress</th>
@@ -29,11 +28,8 @@
 		</thead>
 		<tbody>
 			{% if app.user.adresses %}
-				{% set i = 0 %}
 				{% for adress in adresses %}
-					{% set i = i + 1 %}
 					<tr>
-						<td>{{ adress.id }}</td>
 						<td>{{ adress.fullName }}</td>
 						<td>{{ adress.company }}</td>
 						<td>{{ adress.adress }}</td>
