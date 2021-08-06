@@ -15,15 +15,6 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class AdressController extends AbstractController
 {
-    /**
-     * @Route("/", name="adress_index", methods={"GET"})
-     */
-    public function index(AdressRepository $adressRepository): Response
-    {
-        return $this->render('adress/index.html.twig', [
-            'adresses' => $adressRepository->findAll(),
-        ]);
-    }
 
     /**
      * @Route("/new", name="adress_new", methods={"GET","POST"})
@@ -41,22 +32,13 @@ class AdressController extends AbstractController
             $entityManager->persist($adress);
             $entityManager->flush();
 
-            return $this->redirectToRoute('adress_index', [], Response::HTTP_SEE_OTHER);
+            $this->addFlash('adress_message', 'Your address has been created.');
+            return $this->redirectToRoute('account', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('adress/new.html.twig', [
             'adress' => $adress,
             'form' => $form,
-        ]);
-    }
-
-    /**
-     * @Route("/{id}", name="adress_show", methods={"GET"})
-     */
-    public function show(Adress $adress): Response
-    {
-        return $this->render('adress/show.html.twig', [
-            'adress' => $adress,
         ]);
     }
 
@@ -68,10 +50,13 @@ class AdressController extends AbstractController
         $form = $this->createForm(AdressType::class, $adress);
         $form->handleRequest($request);
 
+
+
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('adress_index', [], Response::HTTP_SEE_OTHER);
+            $this->addFlash('adress_message', 'Your address has been updated.');
+            return $this->redirectToRoute('account', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('adress/edit.html.twig', [
@@ -89,8 +74,10 @@ class AdressController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($adress);
             $entityManager->flush();
+
+            $this->addFlash('adress_message', 'Your address has been deleted.');
         }
 
-        return $this->redirectToRoute('adress_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('account', [], Response::HTTP_SEE_OTHER);
     }
 }
